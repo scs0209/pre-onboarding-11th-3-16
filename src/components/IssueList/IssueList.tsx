@@ -4,6 +4,7 @@ import { getIssues } from '@/api/github';
 import { useIssuesContext } from '@/context/IssueContext';
 
 import AdBanner from '../AdBanner/AdBanner';
+import IssueDetail from '../IssueDetail/IssueDetail';
 import IssueItem from './IssueItem';
 
 const IssueList = () => {
