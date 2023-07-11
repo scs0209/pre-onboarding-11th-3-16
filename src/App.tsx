@@ -1,9 +1,12 @@
 import IssueList from './components/IssueList/IssueList';
+import { IssuesProvider } from './context/IssueContext';
 
 function App() {
   return (
     <div className="App">
-      <IssueList />
+      <IssuesProvider>
+        <IssueList />
+      </IssuesProvider>
     </div>
   );
 }

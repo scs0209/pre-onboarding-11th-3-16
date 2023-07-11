@@ -1,16 +1,20 @@
+import { useEffect } from 'react';
+
 import { getIssues } from '@/api/github';
-import { useEffect, useState } from 'react';
+import { useIssuesContext } from '@/context/IssueContext';
+
+import AdBanner from '../AdBanner/AdBanner';
+import IssueItem from './IssueItem';
 
 const IssueList = () => {
-  const [issues, setIssues] = useState([]);
+  const { issues, setIssues } = useIssuesContext();
 
   useEffect(() => {
     async function fetchIssues() {
-      const data = await getIssues();
+      const fetchedIssues = await getIssues();
 
-      setIssues(data);
+      setIssues(fetchedIssues);
     }
-
     fetchIssues();
   }, []);
 
@@ -18,11 +22,10 @@ const IssueList = () => {
     <>
       <h1>React Issues</h1>
       <ul>
-        {issues.map((issue: any) => (
+        {issues.map((issue: any, index) => (
           <li key={issue.id}>
-            <a href={issue.html_url} target="_blank" rel="noopener noreferrer">
-              {issue.title}
-            </a>
+            <IssueItem issue={issue} />
+            {index === 4 && <AdBanner />}
           </li>
         ))}
       </ul>

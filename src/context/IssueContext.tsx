@@ -1,5 +1,6 @@
+import React, { createContext, FC, ReactNode, useContext, useState } from 'react';
+
 import { IssuesState } from '@/types/Issue';
-import React, { FC, ReactNode, createContext, useContext, useState } from 'react';
 
 interface Props {
   children: ReactNode;
