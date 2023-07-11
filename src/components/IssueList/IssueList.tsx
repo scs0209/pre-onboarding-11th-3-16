@@ -2,49 +2,25 @@ import { useEffect, useState } from 'react';
 
 import { getIssues } from '@/api/github';
 import { useIssuesContext } from '@/context/IssueContext';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { useIssueFetch } from '@/hooks/useIssuesFetch';
 
 import AdBanner from '../AdBanner/AdBanner';
 import IssueItem from './IssueItem';
 
 const IssueList = () => {
-  const { issues, setIssues } = useIssuesContext();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { issues } = useIssuesContext();
+  const { fetchData, loading, error } = useIssueFetch();
   const [page, setPage] = useState(1);
 
-  const fetchData = async (query = '', page = 1) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const newIssues = await getIssues(query, page);
-      const updatedIssues = [...issues, ...newIssues];
-
-      setIssues(updatedIssues);
-    } catch (error: any) {
-      setError(error);
-    }
-    setLoading(false);
-  };
-
-  const handleScroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop !==
-      document.documentElement.offsetHeight
-    )
-      return;
+  const requestMoreData = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
+  useInfiniteScroll(requestMoreData);
+
   useEffect(() => {
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
   }, []);
 
   useEffect(() => {
