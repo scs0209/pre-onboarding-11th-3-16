@@ -8,7 +8,6 @@ const IssueList = () => {
     async function fetchIssues() {
       const data = await getIssues();
 
-      console.log(data);
       setIssues(data);
     }
 
