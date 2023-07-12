@@ -1,17 +1,19 @@
 import { useRepoContext } from '@/context/RepoContext';
 import { RepoHeader } from '@/styles/Header';
 
+import DataLoader from '../DataLoader/DataLoader';
+
 const Header = () => {
   const { data: repo, loading, error } = useRepoContext();
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!repo) return <div>No data available</div>;
-
   return (
-    <RepoHeader>
-      <h1>{repo.full_name}</h1>
-    </RepoHeader>
+    <DataLoader data={repo} loading={loading} error={error}>
+      {(repo) => (
+        <RepoHeader>
+          <h1>{repo.full_name}</h1>
+        </RepoHeader>
+      )}
+    </DataLoader>
   );
 };
 

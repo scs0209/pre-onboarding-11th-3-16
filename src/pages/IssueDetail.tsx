@@ -2,9 +2,9 @@ import { useParams } from 'react-router-dom';
 
 import { IssueDetailProvider } from '@/context/IssueDetailContext';
 
-import IssueDetailItem from './IssueDetailItem';
+import IssueDetailItem from '../components/IssueDetail/IssueDetailItem';
 
-const IssueDetail = () => {
+const IssueDetailPage = () => {
   const { issueNumber } = useParams() as any;
 
   return (
@@ -14,4 +14,4 @@ const IssueDetail = () => {
   );
 };
 
-export default IssueDetail;
+export default IssueDetailPage;

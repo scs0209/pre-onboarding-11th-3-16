@@ -1,10 +1,10 @@
 import { Route, Routes } from 'react-router-dom';
 
 import Header from './components/Header/Header';
-import IssueDetail from './components/IssueDetail/IssueDetail';
-import IssueList from './components/IssueList/IssueList';
 import { IssuesProvider } from './context/IssueContext';
 import { RepoProvider } from './context/RepoContext';
+import IssueDetail from './pages/IssueDetail';
+import IssueList from './pages/IssueList';
 import { Container } from './styles/App';
 
 function App() {
