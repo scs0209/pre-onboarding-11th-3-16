@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { getRepoInfo } from '@/api/github';
+import { RepoHeader } from '@/styles/Header';
 
 const Header = () => {
   const [repoInfo, setRepoInfo] = useState<any>(null);
@@ -17,9 +18,9 @@ const Header = () => {
   if (!repoInfo) return <div>Loading...</div>;
 
   return (
-    <header>
+    <RepoHeader>
       <h1>{repoInfo.full_name}</h1>
-    </header>
+    </RepoHeader>
   );
 };
 
