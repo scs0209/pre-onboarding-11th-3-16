@@ -1,25 +1,16 @@
-import { useEffect, useState } from 'react';
-
-import { getRepoInfo } from '@/api/github';
+import { useRepoContext } from '@/context/RepoContext';
 import { RepoHeader } from '@/styles/Header';
 
 const Header = () => {
-  const [repoInfo, setRepoInfo] = useState<any>(null);
+  const { repo, loading, error } = useRepoContext();
 
-  useEffect(() => {
-    async function fetchRepoInfo() {
-      const fetchedRepoInfo = await getRepoInfo();
-
-      setRepoInfo(fetchedRepoInfo);
-    }
-    fetchRepoInfo();
-  }, []);
-
-  if (!repoInfo) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!repo) return <div>No data available</div>;
 
   return (
     <RepoHeader>
-      <h1>{repoInfo.full_name}</h1>
+      <h1>{repo.full_name}</h1>
     </RepoHeader>
   );
 };
