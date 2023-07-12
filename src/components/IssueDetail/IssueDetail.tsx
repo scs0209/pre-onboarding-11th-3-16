@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useParams } from 'react-router-dom';
 
 import { getIssueDetail } from '@/api/github';
@@ -39,7 +40,7 @@ const IssueDetail = () => {
       <div>작성일: {new Date(issueDetails.created_at).toLocaleDateString()}</div>
       <div>코멘트수: {issueDetails.comments}</div>
       <img src={issueDetails.user.avatar_url} alt={`Avatar for ${issueDetails.user.login}`} />
-      <div dangerouslySetInnerHTML={{ __html: issueDetails.body }} />
+      <ReactMarkdown>{issueDetails.body}</ReactMarkdown>
     </div>
   );
 };
