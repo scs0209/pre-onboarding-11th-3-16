@@ -2,7 +2,7 @@ import { useRepoContext } from '@/context/RepoContext';
 import { RepoHeader } from '@/styles/Header';
 
 const Header = () => {
-  const { repo, loading, error } = useRepoContext();
+  const { data: repo, loading, error } = useRepoContext();
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;

@@ -3,7 +3,7 @@ export interface Repo {
 }
 
 export interface RepoState {
-  repo: Repo | null;
+  data: Repo | null;
   fetchData?: () => void;
   loading: boolean;
   error: any;

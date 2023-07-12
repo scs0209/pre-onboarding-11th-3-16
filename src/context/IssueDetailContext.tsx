@@ -1,35 +1,25 @@
 import React, { createContext, FC, ReactNode, useContext, useState } from 'react';
 
 import { getIssueDetail } from '@/api/github';
+import { useFetch } from '@/hooks/useFetch';
 import { Issue, IssueDetailState } from '@/types/Issue';
 
 interface Props {
   children: ReactNode;
+  issueNumber: number;
 }
 
 const IssueDetailContext = createContext({} as IssueDetailState);
 
 export const useIssueDetailContext = () => useContext(IssueDetailContext);
 
-export const IssueDetailProvider: FC<Props> = ({ children }) => {
-  const [issueDetail, setIssueDetail] = useState<Issue | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
+export const IssueDetailProvider: FC<Props> = ({ children, issueNumber }) => {
+  const { data, loading, error } = useFetch<Issue>(
+    () => getIssueDetail(issueNumber),
+    [issueNumber],
+  );
 
-  const updateIssueDetail = async (issueNumber: number) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await getIssueDetail(issueNumber);
-
-      setIssueDetail(data);
-    } catch (err: any) {
-      setError(err);
-    }
-    setLoading(false);
-  };
-
-  const value = { issueDetail, loading, error, updateIssueDetail };
+  const value = { data, loading, error };
 
   return <IssueDetailContext.Provider value={value}>{children}</IssueDetailContext.Provider>;
 };

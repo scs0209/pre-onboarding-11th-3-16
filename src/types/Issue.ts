@@ -18,17 +18,17 @@ export interface Issue {
 }
 
 export interface IssuesState {
-  issues: Issue[];
-  setIssues: (issues: Issue[]) => void;
-  fetchData: () => void;
+  data: Issue[] | null;
+  setIssues?: (issues: Issue[]) => void;
+  fetchData?: () => void;
   loading: boolean;
   error: any | null;
   requestMoreData: () => void;
 }
 
 export interface IssueDetailState {
-  issueDetail: Issue | null;
+  data: Issue | null;
   loading: boolean;
   error: any;
-  updateIssueDetail: (issueNumber: number) => void;
+  updateIssueDetail?: (issueNumber: number) => void;
 }

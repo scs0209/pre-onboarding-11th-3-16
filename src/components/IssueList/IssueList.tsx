@@ -9,18 +9,14 @@ import AdBanner from '../AdBanner/AdBanner';
 import IssueItem from './IssueItem';
 
 const IssueList = () => {
-  const { issues, fetchData, loading, error, requestMoreData } = useIssuesContext();
+  const { data: issues, loading, error, requestMoreData } = useIssuesContext();
 
   useInfiniteScroll(requestMoreData);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
     <>
       <ListContainer>
-        {issues.map((issue: Issue, index: number) => (
+        {issues?.map((issue: Issue, index: number) => (
           <li key={issue.id}>
             <IssueItem issue={issue} />
             {index === 3 && <AdBanner />}

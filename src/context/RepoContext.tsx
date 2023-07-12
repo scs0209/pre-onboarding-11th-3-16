@@ -1,6 +1,7 @@
-import React, { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react';
+import React, { createContext, FC, ReactNode, useContext } from 'react';
 
 import { getRepoInfo } from '@/api/github';
+import { useFetch } from '@/hooks/useFetch';
 import { Repo, RepoState } from '@/types/Repo';
 
 interface Props {
@@ -12,28 +13,9 @@ const RepoContext = createContext({} as RepoState);
 export const useRepoContext = () => useContext(RepoContext);
 
 export const RepoProvider: FC<Props> = ({ children }) => {
-  const [repo, setRepo] = useState<Repo | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
+  const { data, loading, error } = useFetch<Repo>(getRepoInfo);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const data = await getRepoInfo();
-
-      console.log(data);
-      setRepo(data);
-    } catch (err: any) {
-      setError(err);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const value = { repo, loading, error };
+  const value = { data, loading, error };
 
   return <RepoContext.Provider value={value}>{children}</RepoContext.Provider>;
 };
