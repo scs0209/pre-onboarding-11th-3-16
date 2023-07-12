@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { useParams } from 'react-router-dom';
 
 import { getIssueDetail } from '@/api/github';
+import { AuthorDate, Profile, ProfileImage, TitleContainer } from '@/styles/IssueDetail';
 
 interface IssueDetails {
   number: number;
@@ -33,13 +34,24 @@ const IssueDetail = () => {
 
   return (
     <div className="issue-detail">
-      <h2>
-        #{issueDetails.number}: {issueDetails.title}
-      </h2>
-      <div>작성자: {issueDetails.user.login}</div>
-      <div>작성일: {new Date(issueDetails.created_at).toLocaleDateString()}</div>
-      <div>코멘트수: {issueDetails.comments}</div>
-      <img src={issueDetails.user.avatar_url} alt={`Avatar for ${issueDetails.user.login}`} />
+      <TitleContainer>
+        <Profile>
+          <ProfileImage
+            src={issueDetails.user.avatar_url}
+            alt={`Avatar for ${issueDetails.user.login}`}
+          />
+          <AuthorDate>
+            <h2>
+              #{issueDetails.number}: {issueDetails.title}
+            </h2>
+            <div>
+              작성자: {issueDetails.user.login}, 작성일:{' '}
+              {new Date(issueDetails.created_at).toLocaleDateString()}
+            </div>
+          </AuthorDate>
+        </Profile>
+        <div>코멘트수: {issueDetails.comments}</div>
+      </TitleContainer>
       <ReactMarkdown>{issueDetails.body}</ReactMarkdown>
     </div>
   );
