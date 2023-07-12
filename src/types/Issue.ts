@@ -12,6 +12,9 @@ export interface Issue {
   created_at: string;
   user: User;
   html_url: string;
+  number: number;
+  comments: number;
+  body: string;
 }
 
 export interface IssuesState {
@@ -21,4 +24,11 @@ export interface IssuesState {
   loading: boolean;
   error: any | null;
   requestMoreData: () => void;
+}
+
+export interface IssueDetailState {
+  issueDetail: Issue | null;
+  loading: boolean;
+  error: any;
+  updateIssueDetail: (issueNumber: number) => void;
 }

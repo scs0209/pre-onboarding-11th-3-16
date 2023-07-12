@@ -1,58 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useParams } from 'react-router-dom';
 
-import { getIssueDetail } from '@/api/github';
+import { useIssueDetailContext } from '@/context/IssueDetailContext';
 import { AuthorDate, Profile, ProfileImage, TitleContainer } from '@/styles/IssueDetail';
-
-interface IssueDetails {
-  number: number;
-  title: string;
-  user: {
-    login: string;
-    avatar_url: string;
-  };
-  created_at: string;
-  comments: number;
-  body: string;
-}
 
 const IssueDetail = () => {
   const { issueNumber } = useParams() as any;
-  const [issueDetails, setIssueDetails] = useState<IssueDetails | null>(null);
+  const { issueDetail, loading, error, updateIssueDetail } = useIssueDetailContext();
 
   useEffect(() => {
-    async function fetchIssueDetails() {
-      const fetchedIssueDetails = await getIssueDetail(issueNumber);
-
-      setIssueDetails(fetchedIssueDetails);
-    }
-    fetchIssueDetails();
+    updateIssueDetail(parseInt(issueNumber));
   }, [issueNumber]);
 
-  if (!issueDetails) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!issueDetail) return <div>No data available</div>;
 
   return (
     <div className="issue-detail">
       <TitleContainer>
         <Profile>
           <ProfileImage
-            src={issueDetails.user.avatar_url}
-            alt={`Avatar for ${issueDetails.user.login}`}
+            src={issueDetail.user.avatar_url}
+            alt={`Avatar for ${issueDetail.user.login}`}
           />
           <AuthorDate>
             <h2>
-              #{issueDetails.number}: {issueDetails.title}
+              #{issueDetail.number}: {issueDetail.title}
             </h2>
             <div>
-              작성자: {issueDetails.user.login}, 작성일:{' '}
-              {new Date(issueDetails.created_at).toLocaleDateString()}
+              작성자: {issueDetail.user.login}, 작성일:{' '}
+              {new Date(issueDetail.created_at).toLocaleDateString()}
             </div>
           </AuthorDate>
         </Profile>
-        <div>코멘트수: {issueDetails.comments}</div>
+        <div>코멘트수: {issueDetail.comments}</div>
       </TitleContainer>
-      <ReactMarkdown>{issueDetails.body}</ReactMarkdown>
+      <ReactMarkdown>{issueDetail.body}</ReactMarkdown>
     </div>
   );
 };

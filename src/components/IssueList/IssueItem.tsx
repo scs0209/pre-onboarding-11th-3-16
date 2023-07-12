@@ -1,6 +1,13 @@
-import { AuthorDate, CommentCount, IssueItemContainer, IssueLink } from '@/styles/IssueItem';
+import { VFC } from 'react';
 
-const IssueItem = ({ issue }: any) => {
+import { AuthorDate, CommentCount, IssueItemContainer, IssueLink } from '@/styles/IssueItem';
+import { Issue } from '@/types/Issue';
+
+interface Props {
+  issue: Issue;
+}
+
+const IssueItem: VFC<Props> = ({ issue }) => {
   return (
     <IssueItemContainer>
       <IssueLink to={`/issue/${issue.number}`}>
