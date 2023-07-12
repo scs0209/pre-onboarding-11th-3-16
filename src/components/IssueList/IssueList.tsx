@@ -29,7 +29,6 @@ const IssueList = () => {
 
   return (
     <>
-      <h1>React Issues</h1>
       <ListContainer>
         {issues.map((issue: any, index) => (
           <li key={issue.id}>
