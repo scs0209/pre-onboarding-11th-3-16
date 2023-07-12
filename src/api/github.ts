@@ -25,7 +25,15 @@ export const getIssues = async (query = '', page = 1) => {
 export const getIssueDetail = async (issueNumber: number) => {
   const response = await githubAPI.get(`/repos/facebook/react/issues/${issueNumber}`);
 
-  console.log(response);
+  return response.data;
+};
+
+export const getRepoInfo = async () => {
+  const response = await githubAPI.get('/repos/facebook/react', {
+    headers: {
+      Authorization: `Barer ${process.env.REACT_APP_GITHUB_API_TOKEN}`,
+    },
+  });
 
   return response.data;
 };
