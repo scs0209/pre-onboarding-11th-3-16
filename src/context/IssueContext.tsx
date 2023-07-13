@@ -1,10 +1,9 @@
-import React, { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { createContext, FC, ReactNode, useContext, useState } from 'react';
 
 import { getIssues } from '@/api/github';
+import { useDataFetcher } from '@/hooks/useDataFetch';
 import { setData, setError, setLoading } from '@/redux/slice/issueSlice';
-import { RootState } from '@/redux/store';
-import { IssuesState } from '@/types/Issue';
+import { Issue, IssuesState } from '@/types/Issue';
 
 interface Props {
   children: ReactNode;
@@ -16,27 +15,22 @@ export const useIssuesContext = () => useContext(IssuesContext);
 
 export const IssuesProvider: FC<Props> = ({ children }) => {
   const [page, setPage] = useState(1);
-  const dispatch = useDispatch();
-  const issuesState = useSelector((state: RootState) => state.issues);
 
-  const fetchData = async () => {
-    dispatch(setLoading(true));
-    dispatch(setError(null));
+  const fetchFunction = async (prevData: Issue[]) => {
+    const newIssues = await getIssues(page);
 
-    try {
-      const newIssues = await getIssues(page);
-
-      dispatch(setData({ newIssues, prevData: issuesState.data }));
-    } catch (err) {
-      dispatch(setError(err));
+    if (prevData) {
+      return { prevData, newIssues };
+    } else {
+      return newIssues;
     }
-
-    dispatch(setLoading(false));
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [page]);
+  const issuesState = useDataFetcher<IssuesState>(
+    fetchFunction,
+    { reducer: 'issues', setLoading, setError, setData },
+    [page],
+  );
 
   const requestMoreData = () => {
     setPage((prevPage) => prevPage + 1);
