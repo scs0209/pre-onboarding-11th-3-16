@@ -1,8 +1,10 @@
-import React, { createContext, FC, ReactNode, useContext, useState } from 'react';
+import React, { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getIssues } from '@/api/github';
-import { useFetch } from '@/hooks/useFetch';
-import { Issue, IssuesState } from '@/types/Issue';
+import { setData, setError, setLoading } from '@/redux/slice/issueSlice';
+import { RootState } from '@/redux/store';
+import { IssuesState } from '@/types/Issue';
 
 interface Props {
   children: ReactNode;
@@ -14,30 +16,65 @@ export const useIssuesContext = () => useContext(IssuesContext);
 
 export const IssuesProvider: FC<Props> = ({ children }) => {
   const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
+  const issuesState = useSelector((state: RootState) => state.issues);
 
-  const fetchFunction = async (previousData: Issue[] | null) => {
-    const newIssues = await getIssues('', page);
+  const fetchData = async () => {
+    dispatch(setLoading(true));
+    dispatch(setError(null));
 
-    if (previousData) {
-      return [...previousData, ...newIssues];
-    } else {
-      return newIssues;
+    try {
+      const newIssues = await getIssues(page);
+
+      dispatch(setData({ newIssues, prevData: issuesState.data }));
+    } catch (err) {
+      dispatch(setError(err));
     }
+
+    dispatch(setLoading(false));
   };
 
-  const fetchState = useFetch<Issue[]>(fetchFunction, [page]);
-  const { data, loading, error } = fetchState;
+  useEffect(() => {
+    fetchData();
+  }, [page]);
 
   const requestMoreData = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  const value = {
-    data,
-    loading,
-    error,
-    requestMoreData,
-  };
-
-  return <IssuesContext.Provider value={value}>{children}</IssuesContext.Provider>;
+  return (
+    <IssuesContext.Provider value={{ ...issuesState, requestMoreData }}>
+      {children}
+    </IssuesContext.Provider>
+  );
 };
+
+// export const IssuesProvider: FC<Props> = ({ children }) => {
+//   const [page, setPage] = useState(1);
+
+//   const fetchFunction = async (previousData: Issue[] | null) => {
+//     const newIssues = await getIssues(page);
+
+//     if (previousData) {
+//       return [...previousData, ...newIssues];
+//     } else {
+//       return newIssues;
+//     }
+//   };
+
+//   const fetchState = useFetch<Issue[]>(fetchFunction, [page]);
+//   const { data, loading, error } = fetchState;
+
+//   const requestMoreData = () => {
+//     setPage((prevPage) => prevPage + 1);
+//   };
+
+//   const value = {
+//     data,
+//     loading,
+//     error,
+//     requestMoreData,
+//   };
+
+//   return <IssuesContext.Provider value={value}>{children}</IssuesContext.Provider>;
+// };

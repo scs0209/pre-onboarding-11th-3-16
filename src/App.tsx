@@ -12,13 +12,13 @@ function App() {
     <Container>
       <RepoProvider>
         <Header />
-        <IssuesProvider>
-          <Routes>
-            <Route path="/" element={<IssueList />} />
-            <Route path="/issue/:issueNumber" element={<IssueDetail />} />
-          </Routes>
-        </IssuesProvider>
       </RepoProvider>
+      <IssuesProvider>
+        <Routes>
+          <Route path="/" element={<IssueList />} />
+          <Route path="/issue/:issueNumber" element={<IssueDetail />} />
+        </Routes>
+      </IssuesProvider>
     </Container>
   );
 }

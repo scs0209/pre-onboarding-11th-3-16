@@ -7,7 +7,7 @@ const githubAPI = axios.create({
   },
 });
 
-export const getIssues = async (query = '', page = 1) => {
+export const getIssues = async (page = 1) => {
   const response = await githubAPI.get('/repos/facebook/react/issues', {
     params: {
       state: 'open',
@@ -15,7 +15,6 @@ export const getIssues = async (query = '', page = 1) => {
       page,
       direction: 'desc',
       sort: 'comments',
-      q: query,
     },
   });
 
